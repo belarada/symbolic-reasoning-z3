@@ -36,6 +36,6 @@ This project is an evolving prototype. Potential areas for enhancement include:
 - **Proof Certificates**: Exporting Z3 results into formal proof assistants like **Lean** or **Coq** for absolute verification.
 
 ---
-**Author:** [Jovana]  
+**Author:** Jovana  
 **Field:** Mathematics and Computer Science @ MATF Belgrade  
 **Interests:** Formal Methods, Automated Theorem Proving, Competitive Mathematics.
