@@ -5,6 +5,54 @@ from itertools import combinations
 class CombinatoricsSuite(OlympiadProver):
     def __init__(self):
         super().__init__("Combinatorics Suite")
+
+    def verify_graph_coloring(self, n, num_colors):
+        """
+        verify that a graph on n vertices can be colored with num_colors colors
+        such taht adjacent vertices have different colors
+        """
+        self.name = f"Graph coloring n = {n}, colors = {num_colors}"
+        self.solver.reset()
+
+        adj = [[Bool(f"e_{i}_{j}") for j in range(n)] for i in range(n)]
+        color = [Int(f"c_{i}") for i in range(n)]
+
+        for i in range(n):
+            self.add_condition(adj[i][i] == False)
+            for j in range(i+1, n):
+                self.add_condition(adj[i][j] == adj[j][i])
+
+        for i in range(n):
+            self.add_condition(color[i] >= 0, color[i] < num_colors)
+
+        for i in range(n):
+            for j in range(n):
+                if i!= j:
+                    self.add_condition(Implies(adj[i][j], color[i] != color[j]))
+        
+        if self.solver.check() == sat:
+            print("Valid coloring exists")
+            return self.solver.model()
+        return None
+
+    def verify_erdos_ko_rado(self, n, k, family_size):
+        """
+        Erdos-Ko-Rado: any family of k-seubsets of {1,...,n} that are pairwise intersecting
+        has size <= C(n-1, k-1)
+        """
+        F = [[Bool(f"F_{i}_{j}") for j in range(n)] for i in range(family_size)]
+
+        for i in range(family_size):
+            self.add_condition(Sum([If(F[i][j], 1, 0) for j in range(n)]) == k)
+        for i in range(family_size):
+            for j in range(i+1, family_size):
+                intersection = [And(F[i][t], F[j][t]) for t in range(n)]
+                self.add_condition(Or(*intersection))
+        if self.solver.check() == sat:
+            print("Intersecting family exists")
+            return self.solver.model()
+        print("No such family")
+        return None
         
     def check_ramsey(self, n, k_clique, s_independent):
         """ Ramsey R(k, s) > n verification using graph adjacency matrix """
