@@ -12,7 +12,6 @@ class NumberTheorySuite(OlympiadProver):
         self.solver.reset()
         self.add_condition(x > 1, y > 1, x < IntVal(bound), y < IntVal(bound))
         
-        # FIX: Koristimo (x * x) umesto x**2 da bismo ocuvali celobrojnost (IntSort)
         claim = Not((x * x) - IntVal(D) * (y * y) == IntVal(1))
         return self.prove(claim)
     
@@ -22,7 +21,6 @@ class NumberTheorySuite(OlympiadProver):
         n = Int('n')
         self.solver.reset()
         
-        # FIX: Mnozimo rucno da izbegnemo kastovanje u Real number
         n_pow = n
         for _ in range(p_val - 1):
             n_pow = n_pow * n
@@ -39,7 +37,6 @@ class NumberTheorySuite(OlympiadProver):
         q_is_prime = Or([q == IntVal(v) for v in primes_list])
         self.add_condition(p_is_prime, q_is_prime)
         
-        # FIX: (p * p) umesto p**2
         self.solver.add((p * p) - IntVal(2) * (q * q) == IntVal(1))
         
         if self.solver.check() == sat:
